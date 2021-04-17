@@ -2,3 +2,4 @@
 我是子分支信息2
 我是子分支2
 hello wrold
+var master ="我是主分支"
