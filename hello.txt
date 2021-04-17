@@ -3,3 +3,5 @@
 我是子分支2
 hello wrold
 var master ="我是主分支"
+hello wrold
+hello 
