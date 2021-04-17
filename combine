@@ -1,0 +1,105 @@
+### 协同开发
+#### SVN
+1. SVN是集中是服务器，整个公司用的是同一台服务器
+    svn 上传代码和下载代码需要用户名和密码，用户名和密码是不允许自己注册的，是服务器端生成的，所以进入公司之后，他们会
+    给你用户名和密码
+
+    svn客户端操作
+        第一步：复制仓库路径，检出关联 checkout
+        第二步：提交 svn commit 让服务器处于最新的状态
+        第三部：更新 svn update
+        冲突(服务器只能基于一个版本进行升级)：
+        方法1（升级副本）：当一个人写代码的时候提交了，另外一个人写代码提交时会发生冲突，解决方法，另外一个人先更新一下，再进行提交
+        第一个人再进行更新，此时两个人就是最新的版本了
+        方法2：手动解决，当发生冲突的时候不升级副本，而是取消，然后对代码的文件进行修改整理，然后提交，然后前一个人进行更新即可
+
+
+### GIT
+1. git是分布式服务器
+    1. 创建一个文件夹codestore，将这个文件的目录在git中打开
+    第一步：
+        git init // 此时codestore这个文件夹就是git仓库了，下面有.git文件
+    第二步
+        在 codestore中创建一个demo.txt
+        git add demo.txt 添加版本库，此时并没有正在的添加
+    第三步
+        正在添加到版本库
+        git commit -m "注释"  第二个参数是必选项
+    第四步版本回退管理
+        git status
+            通过这个命令可以查看你当前版本库的状态，查看是否add了但是没有commit 
+        git diff 
+            只能查看当前版本库中内容的修改，但是git add之后就无法查看了
+        git log
+            查看历史提交版本信息
+        git log --pretty=oneline;
+            查看历史版本信息简约化
+        git reset --hard HEAD^ 历史版本回退  一个^表示往前回退一个版本
+        git reset --hard 版本号 历史版本回退
+        git reflog 记录历史操作，并且记录操作到这里的版本号是多少
+    第五步
+        工作区和暂存区，版本库
+        工作区：就是git参库codestore
+        暂存区：git add 就是进入暂存区
+        版本库: git commit -m 就是进入版本库
+    第六步
+        git 管理的是操作
+            意思是我修改了一个文件add了，在去修改，我commit了，此时版本库中最新的内容是之前add的，
+            引用场景：比如说我一个功能三点钟做完了，但是五点钟要commit，难道我就一直等到五点钟吗？不是的，我可以先add，再进行第二个功能的编写 等到五点钟之后commit，写完第二个功能之后add，commit
+        撤销修改
+            场景：我修改文件，我发现我修改错误了，但是add了，需要撤销操作
+             撤销暂存区操作 
+                1. 如果放到暂存区
+                    1. git reset HEAD filename 撤销暂存区操作回到add之前
+                    2. git checkout -- filename 让文件回到修改文件之前
+                2. 如果没有放到暂存区
+                    git checkout -- filename 
+                3. 如果已经添加到版本库中
+                    git reset --hard HEAD^
+            删除文件
+                1. 没有被添加到版本库中
+                    rm filename
+                2. 已经添加到版本库中
+                    1. 彻底删除
+                        rm filename
+                        git rm filename
+                        git commit -m ""
+                    2. rm filename 之后恢复原样 
+                            1. rm filename
+                            2. git checkout -- filename
+分支管理
+    含义：在主版本上克隆一个一个版本，在克隆之后的版本进行操作，和之前的版本进行合并
+    操作流程
+        1. 创建并且切换分支(新版本 git switch -c 分支名称 这个等同于1)
+            git checkout -b 分支名称 eg:git checkout -b dev   dev就是分支名称
+            此时不仅创建了分支，还把当前的操作切换到了
+        2. 切换分支到主分支
+            git checkout 分支名称
+            此时可以看到主分支上并没有刚刚操作的内容
+            因此需要合并分支（在主分支master下合并分支)
+        3. 合并分支
+            git merge dev
+        4. 查看分支
+            git branch 
+        5. 刚刚那个子分支完成它的作用了局可以删除分支了
+            git branch -d 分支名称
+        6. 创建分支但是不切换分支
+            git branch dev
+冲突管理
+    含义：当切换到子分支进行操作add，commit之后，切换到主分支操作add，commit
+    之后，在主分支下啊git merge 对分支进行合并，会报错
+    解决方法：利用vscode
+关联远程仓库
+    1. 创建ssh key 
+        ssh-keygen -t rsa -C "邮箱"
+    2. github 账号关联创建的ssh key
+        zxycom2018@outlook.com
+        zxy3361916748
+    3. github创建仓库，创建本地代码到仓库
+            1.  git remote add origin https://github.com/summerAB/-.git
+            2.  git branch -M main
+            3. git push -u origin main
+            4. 修改代码，再次上传
+                1. git add filename
+                2. git commit -m ""
+                3. git push
